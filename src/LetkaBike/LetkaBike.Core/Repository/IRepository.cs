@@ -1,9 +1,12 @@
-﻿namespace LetkaBike.Core.UnitOfWork
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace LetkaBike.Core.Repository
 {
-    public interface IRepository<TEntity, in TKey> where TEntity : class
+    public interface IRepository<TEntity> where TEntity : class
     {
-        TEntity GetById(TKey id);
-        void Create(TEntity entity);
+        IEnumerable<TEntity> GetAll();
+        Task Create(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
     }

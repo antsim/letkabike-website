@@ -7,9 +7,9 @@ namespace LetkaBike.Core.Data
 {
     public class LetkaContext : DbContext
     {
-        public virtual DbSet<City> City { get; set; }
-        public virtual DbSet<Rider> Rider { get; set; }
-        public virtual DbSet<Ride> Ride { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Rider> Riders { get; set; }
+        public virtual DbSet<Ride> Rides { get; set; }
 
         private readonly DbContextOptions _options;
 
