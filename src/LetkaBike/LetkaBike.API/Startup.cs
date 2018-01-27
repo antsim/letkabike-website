@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using LetkaBike.Core.Services;
 using LetkaBike.Core.Repository;
 using LetkaBike.Core.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LetkaBike.API
 {
@@ -27,10 +28,13 @@ namespace LetkaBike.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<LetkaContext>();
             services.TryAddScoped<IRepository<City>, Repository<City>>();
             services.TryAddScoped<ICityService, CityService>();
+
             services.AddMvc();
+
+            services.AddDbContext<LetkaContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

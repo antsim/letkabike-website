@@ -5,9 +5,9 @@ namespace LetkaBike.Core.UnitOfWork
 {
     public class UnitOfWorkFactory : IUnitOfWorkFactory
     {
-        private readonly DbContextOptions _options;
+        private readonly DbContextOptions<LetkaContext> _options;
 
-        public UnitOfWorkFactory(DbContextOptions options)
+        public UnitOfWorkFactory(DbContextOptions<LetkaContext> options)
         {
             _options = options;
         }

@@ -11,9 +11,9 @@ namespace LetkaBike.Core.Data
         public virtual DbSet<Rider> Riders { get; set; }
         public virtual DbSet<Ride> Rides { get; set; }
 
-        private readonly DbContextOptions _options;
+        private readonly DbContextOptions<LetkaContext> _options;
 
-        public LetkaContext(DbContextOptions options) : base(options)
+        public LetkaContext(DbContextOptions<LetkaContext> options) : base(options)
         {
             _options = options;
         }

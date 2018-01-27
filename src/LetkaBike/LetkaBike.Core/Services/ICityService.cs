@@ -9,5 +9,8 @@ namespace LetkaBike.Core.Services
     public interface ICityService
     {
         IEnumerable<City> GetAll();
+        void Create(City city);
+        void Delete(City city);
+        void Update(City city);
     }
 }

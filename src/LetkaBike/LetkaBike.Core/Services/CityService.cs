@@ -16,9 +16,24 @@ namespace LetkaBike.Core.Services
             _cityRepository = cityRepository;
         }
 
+        public void Create(City city)
+        {
+            _cityRepository.Create(city);
+        }
+
+        public void Delete(City city)
+        {
+            _cityRepository.Delete(city);
+        }
+
         public IEnumerable<City> GetAll()
         {
             return _cityRepository.GetAll();
+        }
+
+        public void Update(City city)
+        {
+            _cityRepository.Update(city);
         }
     }
 }
