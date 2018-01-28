@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LetkaBike.Core.Data
 {
-    public class LetkaContext : DbContext
+    public class LetkaContext : IdentityDbContext<Rider, IdentityRole, string>
     {
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Rider> Riders { get; set; }
@@ -31,6 +33,8 @@ namespace LetkaBike.Core.Data
 
             modelBuilder.Entity<RiderRide>()
                 .HasKey(e => new {e.RiderId, e.RideId});
+
+            base.OnModelCreating(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
