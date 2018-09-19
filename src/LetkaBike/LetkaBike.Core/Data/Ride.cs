@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace LetkaBike.Core.Data
 {
-    public partial class Ride
+    public class Ride
     {
         public Ride()
         {

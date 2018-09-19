@@ -1,39 +1,38 @@
 ﻿using LetkaBike.Core.Data;
 using LetkaBike.Core.Repository;
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+using LetkaBike.Core.Models;
+using Mapster;
 
 namespace LetkaBike.Core.Services
 {
     public class CityService : ICityService
     {
-        private IRepository<City> _cityRepository;
+        private readonly IRepository<City> _cityRepository;
 
         public CityService(IRepository<City> cityRepository)
         {
             _cityRepository = cityRepository;
         }
 
-        public void Create(City city)
+        public void Create(CityDTO city)
         {
-            _cityRepository.Create(city);
+            _cityRepository.Create(city.Adapt<City>());
         }
 
-        public void Delete(City city)
+        public void Delete(CityDTO city)
         {
-            _cityRepository.Delete(city);
+            _cityRepository.Delete(city.Adapt<City>());
         }
 
-        public IEnumerable<City> GetAll()
+        public IEnumerable<CityDTO> GetAll()
         {
-            return _cityRepository.GetAll();
+            return _cityRepository.GetAll().Adapt<IEnumerable<CityDTO>>();
         }
 
-        public void Update(City city)
+        public void Update(CityDTO city)
         {
-            _cityRepository.Update(city);
+            _cityRepository.Update(city.Adapt<City>());
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LetkaBike.Core.Data
 {
-    public partial class Rider : IdentityUser
+    public class Rider : IdentityUser
     {
         public Rider()
         {
