@@ -8,7 +8,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetkaBike.API", "LetkaBike.
 		{6DACD832-1641-447D-8233-B1FC45F796A2} = {6DACD832-1641-447D-8233-B1FC45F796A2}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetkaBike.Core", "LetkaBike.Core\LetkaBike.Core.csproj", "{6DACD832-1641-447D-8233-B1FC45F796A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetkaBike.Core", "LetkaBike.Core\LetkaBike.Core.csproj", "{6DACD832-1641-447D-8233-B1FC45F796A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{530283D1-5151-41AC-8C43-17EC266CFFB5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetkaBike.Tests", "LetkaBike.Tests\LetkaBike.Tests.csproj", "{22D79692-2BA8-4137-9472-86799AA4DA2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,9 +28,16 @@ Global
 		{6DACD832-1641-447D-8233-B1FC45F796A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DACD832-1641-447D-8233-B1FC45F796A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DACD832-1641-447D-8233-B1FC45F796A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22D79692-2BA8-4137-9472-86799AA4DA2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22D79692-2BA8-4137-9472-86799AA4DA2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22D79692-2BA8-4137-9472-86799AA4DA2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22D79692-2BA8-4137-9472-86799AA4DA2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{22D79692-2BA8-4137-9472-86799AA4DA2E} = {530283D1-5151-41AC-8C43-17EC266CFFB5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {06E7CC1D-9406-434F-AD91-C622833705BB}
