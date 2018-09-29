@@ -1,4 +1,3 @@
-using ExpectedObjects;
 using LetkaBike.Core.Data;
 using LetkaBike.Core.Models;
 using Mapster;
@@ -20,8 +19,8 @@ namespace LetkaBike.Tests
 
             var cityDto = city.Adapt<CityDTO>();
 
-            Assert.Equal(1, cityDto.CityId);
-            Assert.Equal("Tampere", cityDto.Name);
+            Assert.Equal(city.CityId, cityDto.CityId);
+            Assert.Equal(city.Name, cityDto.Name);
         }
 
         [Fact]
@@ -29,6 +28,7 @@ namespace LetkaBike.Tests
         {
             var city = new City { CityId = 1, Name = "Tampere" };
             var time = DateTimeOffset.Now.AddDays(1);
+
             var rider = new Rider
             {
                 RiderId = 1,
@@ -47,9 +47,6 @@ namespace LetkaBike.Tests
                 UserName = "unittest"
             };
 
-            var expectedRider = rider.ToExpectedObject();
-            var expectedCity = city.ToExpectedObject();
-
             var ride = new Ride
             {
                 RideId = 1,
@@ -64,14 +61,14 @@ namespace LetkaBike.Tests
 
             var rideDto = ride.Adapt<RideDTO>();
 
-            Assert.Equal(1, rideDto.RideId);
-            Assert.Equal(time, rideDto.HappensOn);
-            expectedRider.ShouldEqual(rideDto.OrganizedBy);
-            Assert.Equal(1234545.5M, rideDto.LocationLatitude);
-            Assert.Equal(5432121.5M, rideDto.LocationLongitude);
-            Assert.Equal("Lahdesjärven ABC", rideDto.LocationName);
-            expectedCity.ShouldEqual(rideDto.LocationCity);
-            Assert.Equal("Yksikkötesti", rideDto.Description);
+            Assert.Equal(ride.RideId, rideDto.RideId);
+            Assert.Equal(ride.HappensOn, rideDto.HappensOn);
+            Assert.IsType<Rider>(rideDto.OrganizedBy);
+            Assert.Equal(ride.LocationLatitude, rideDto.LocationLatitude);
+            Assert.Equal(ride.LocationLongitude, rideDto.LocationLongitude);
+            Assert.Equal(ride.LocationName, rideDto.LocationName);
+            Assert.IsType<City>(rideDto.LocationCity);
+            Assert.Equal(ride.Description, rideDto.Description);
         }
 
         [Fact]
@@ -97,11 +94,22 @@ namespace LetkaBike.Tests
                 UserName = "unittest"
             };
 
-            var expectedRider = rider.ToExpectedObject();
-
             var riderDto = rider.Adapt<RiderDTO>();
 
-            expectedRider.ShouldEqual(riderDto);
+            Assert.Equal(rider.RiderId, riderDto.RiderId);
+            Assert.Equal(rider.AccessFailedCount, riderDto.AccessFailedCount);
+            Assert.Equal(rider.Email, riderDto.Email);
+            Assert.Equal(rider.EmailConfirmed, riderDto.EmailConfirmed);
+            Assert.Equal(rider.LockoutEnabled, riderDto.LockoutEnabled);
+            Assert.Equal(rider.LockoutEnd, riderDto.LockoutEnd);
+            Assert.Equal(rider.NormalizedEmail, riderDto.NormalizedEmail);
+            Assert.Equal(rider.NormalizedUserName, riderDto.NormalizedUserName);
+            Assert.Equal(rider.PasswordHash, riderDto.PasswordHash);
+            Assert.Equal(rider.PhoneNumber, riderDto.PhoneNumber);
+            Assert.Equal(rider.PhoneNumberConfirmed, riderDto.PhoneNumberConfirmed);
+            Assert.Equal(rider.SecurityStamp, riderDto.SecurityStamp);
+            Assert.Equal(rider.TwoFactorEnabled, riderDto.TwoFactorEnabled);
+            Assert.Equal(rider.UserName, riderDto.UserName);
         }
     }
 }
