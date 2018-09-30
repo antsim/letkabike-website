@@ -5,10 +5,11 @@ namespace LetkaBike.API.Controllers
 {
     [Produces("application/json")]
     [Route("api/1.0/[controller]")]
-    public class CityController : Controller
+    [ApiController]
+    public class CitiesController : ControllerBase
     {
         private readonly ICityService _cityService;
-        public CityController(ICityService cityService)
+        public CitiesController(ICityService cityService)
         {
             _cityService = cityService;
         }

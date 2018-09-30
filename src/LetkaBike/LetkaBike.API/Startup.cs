@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using LetkaBike.Core.Data;
+using LetkaBike.Core.Repository;
+using LetkaBike.Core.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using LetkaBike.Core.Services;
-using LetkaBike.Core.Repository;
-using LetkaBike.Core.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
 namespace LetkaBike.API
@@ -27,9 +29,16 @@ namespace LetkaBike.API
             services.AddDbContext<LetkaContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
 
-            services.AddIdentity<Rider, IdentityRole>()
+            services.AddDefaultIdentity<Rider>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<LetkaContext>()
                 .AddDefaultTokenProviders();
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -42,8 +51,10 @@ namespace LetkaBike.API
 
             services.TryAddScoped<IRepository<City>, Repository<City>>();
             services.TryAddScoped<ICityService, CityService>();
+            services.TryAddScoped<IUserService, UserService>();
 
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,7 +64,15 @@ namespace LetkaBike.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
 
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseMvc();
         }
