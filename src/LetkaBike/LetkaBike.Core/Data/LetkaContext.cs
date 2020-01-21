@@ -39,15 +39,17 @@ namespace LetkaBike.Core.Data
             modelBuilder.Entity<RiderRide>()
                 .HasKey(e => new {e.RiderId, e.RideId});
 
+
+
             base.OnModelCreating(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (_options == null)
+            if (_options == null || !optionsBuilder.IsConfigured)
             {
-	            //optionsBuilder.UseSqlServer(@"Server=(local);Database=LetkaBike;Trusted_Connection=True;");
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=LetkaBike;Trusted_Connection=True;");
+                optionsBuilder.UseInMemoryDatabase("Letka");
+                //optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=LetkaBike;Trusted_Connection=True;");
             }
         }
     }
