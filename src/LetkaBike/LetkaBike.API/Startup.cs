@@ -28,9 +28,16 @@ namespace LetkaBike.API
         {
             services.AddControllers();
 
-            services.AddDbContext<LetkaContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
-
+            // Use Sql Server 
+            //services.AddDbContext<LetkaContext>(options =>
+            //   options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
+           
+            // or 
+            
+            // Sqlite
+            services.AddDbContext<LetkaContext> (options =>
+                options.UseSqlite("Datasource: memory"));
+            
             services.AddDefaultIdentity<Rider>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<LetkaContext>()
@@ -62,6 +69,11 @@ namespace LetkaBike.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // Automatically ensure the DB is created
+                using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+                var context = serviceScope.ServiceProvider.GetRequiredService<LetkaContext>();
+                context.Database.EnsureCreated();
             }
             else
             {
