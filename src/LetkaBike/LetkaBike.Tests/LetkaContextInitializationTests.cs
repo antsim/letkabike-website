@@ -26,7 +26,7 @@ namespace LetkaBike.Tests
                 .Options;
         }
 
-        [Fact]
+        [Fact(Skip = "Not an actual test, only to re-create the local DB")]
         public void InitializeDatabaseWithTestData()
         {
             using var context = new LetkaContext(_options);
