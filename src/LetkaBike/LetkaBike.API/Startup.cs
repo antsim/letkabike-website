@@ -1,4 +1,5 @@
-﻿using LetkaBike.Core.Data;
+﻿using System.Linq;
+using LetkaBike.Core.Data;
 using LetkaBike.Core.Repository;
 using LetkaBike.Core.Services;
 using Microsoft.AspNetCore.Builder;
@@ -35,8 +36,14 @@ namespace LetkaBike.API
             // or 
             
             // Sqlite
-            services.AddDbContext<LetkaContext> (options =>
-                options.UseSqlite("Datasource: memory"));
+            //services.AddDbContext<LetkaContext> (options =>
+            //    options.UseSqlite("DataSource=:memory:"));
+            
+            // or
+            
+            // SqlServer in-memory
+            services.AddDbContext<LetkaContext>(options =>
+                options.UseInMemoryDatabase("Letka"));
             
             services.AddDefaultIdentity<Rider>()
                 .AddRoles<IdentityRole>()

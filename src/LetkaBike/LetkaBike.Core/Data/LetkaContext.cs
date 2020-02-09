@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,8 +40,13 @@ namespace LetkaBike.Core.Data
             modelBuilder.Entity<RiderRide>()
                 .HasKey(e => new {e.RiderId, e.RideId});
 
-
-
+            modelBuilder.Entity<City>()
+                .HasData(new List<City>
+                {
+                    new City {CityId = 1, Name = "Tampere"}, 
+                    new City { CityId = 2, Name = "Helsinki"}
+                });
+            
             base.OnModelCreating(modelBuilder);
         }
 
