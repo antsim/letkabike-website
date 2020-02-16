@@ -1,3 +1,5 @@
+name: $(GitVersion.MajorMinorPatch)-$(GitVersion.ShortSha)
+
 trigger:
   - master
 
@@ -52,9 +54,12 @@ stages:
               modifyOutputPath: false
               workingDirectory: src/LetkaBike
 
-          - task: PublishBuildArtifacts@1
-            displayName: "Publish Artifact: drop"
-            publishLocation: "pipeline"
+          - task: PublishPipelineArtifact@1
+            displayName: "Publish pipeline artifact"
+            inputs:
+              targetPath: "$(Build.ArtifactStagingDirectory)"
+              artifact: "drop"
+              publishLocation: "pipeline"
 
   - stage: B
     displayName: "Deploy"
