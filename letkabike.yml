@@ -95,6 +95,7 @@ stages:
 
   - stage: C
     displayName: "Generate release notes"
+    pool: server
 
     jobs:
       - job: releasenotes
