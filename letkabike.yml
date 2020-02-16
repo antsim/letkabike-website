@@ -77,6 +77,11 @@ stages:
           runOnce:
             deploy:
               steps:
+                - download: none
+                - download: current
+                  patterns: "**/*.zip"
+                  path: "$(Pipeline.Workspace)"
+
                 - task: AzureRmWebAppDeployment@4
                   displayName: "Azure App Service Deploy: app-letkabike-dev-001"
                   inputs:
@@ -85,4 +90,4 @@ stages:
                     WebAppName: "app-letkabike-dev-001"
                     RuntimeStack: "DOTNETCORE|Latest"
                     StartupCommand: "dotnet LetkaBike.API.dll"
-                    Package: "$(System.DefaultWorkingDirectory)/drop/**/*.zip"
+                    Package: "$(Pipeline.Workspace)/**/*.zip"
