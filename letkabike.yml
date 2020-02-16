@@ -54,3 +54,28 @@ stages:
 
           - task: PublishBuildArtifacts@1
             displayName: "Publish Artifact: drop"
+
+  - stage: B
+    displayName: "Deploy"
+
+    jobs:
+      - deployment: dev
+        displayName: "Deploy to dev"
+
+        pool:
+          vmImage: "ubuntu-latest"
+
+        environment: "letkabike-dev"
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureRmWebAppDeployment@4
+                  displayName: "Azure App Service Deploy: app-letkabike-dev-001"
+                  inputs:
+                    azureSubscription: "azure-letkabike-dev"
+                    appType: webAppLinux
+                    WebAppName: "app-letkabike-dev-001"
+                    RuntimeStack: "DOTNETCORE|Latest"
+                    StartupCommand: "dotnet LetkaBike.API.dll"
