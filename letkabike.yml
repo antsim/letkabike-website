@@ -78,9 +78,10 @@ stages:
             deploy:
               steps:
                 - download: none
-                - download: current
-                  patterns: "**/*.zip"
-                  path: "$(Pipeline.Workspace)"
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    patterns: "**/*.zip"
+                    path: "$(Pipeline.Workspace)"
 
                 - task: AzureRmWebAppDeployment@4
                   displayName: "Azure App Service Deploy: app-letkabike-dev-001"
