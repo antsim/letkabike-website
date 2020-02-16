@@ -102,7 +102,4 @@ stages:
         displayName: "Generate release notes"
 
         steps:
-          - task: gittools.gitversion.gitversion-task.GitVersion@5
-            displayName: GitVersion
-
-          - powershell: "PowerShell Invoke-WebRequest -Uri $(FunctionUri)?code=$(FunctionKey)&releaseId{Build.BuildId} -Method GET"
+          - powershell: "Invoke-WebRequest -Uri $(FunctionUri)?code=$(FunctionKey)&releaseId=${Build.BuildId} -Method GET"
