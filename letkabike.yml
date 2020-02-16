@@ -16,6 +16,8 @@ stages:
     jobs:
       - job: build
         displayName: "Build and Test"
+        pool:
+          vmImage: "ubuntu-latest"
 
         steps:
           - task: gittools.gitversion.gitversion-task.GitVersion@5
@@ -94,6 +96,7 @@ stages:
                     Package: "$(Pipeline.Workspace)/**/*.zip"
 
   - stage: C
+    dependsOn: B
     displayName: "Generate release notes"
     pool: server
 
