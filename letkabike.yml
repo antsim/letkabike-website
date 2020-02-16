@@ -92,3 +92,22 @@ stages:
                     RuntimeStack: "DOTNETCORE|Latest"
                     StartupCommand: "dotnet LetkaBike.API.dll"
                     Package: "$(Pipeline.Workspace)/**/*.zip"
+
+  - stage: C
+    displayName: "Generate release notes"
+
+    jobs:
+      - job: releasenotes
+        displayName: "Generate release notes"
+
+        steps:
+          - task: gittools.gitversion.gitversion-task.GitVersion@5
+            displayName: GitVersion
+
+          - task: AzureFunction@1
+            displayName: "Call release notes generator"
+            inputs:
+              function: https://func-releasenotes.azurewebsites.net/api/ReleaseNotes
+              key: $(FunctionKey)
+              method: GET
+              queryParameters: "releaseId=$(Build.BuildId)"
