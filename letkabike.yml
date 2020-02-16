@@ -85,3 +85,4 @@ stages:
                     WebAppName: "app-letkabike-dev-001"
                     RuntimeStack: "DOTNETCORE|Latest"
                     StartupCommand: "dotnet LetkaBike.API.dll"
+                    Package: "$(System.DefaultWorkingDirectory)/drop/**/*.zip"
