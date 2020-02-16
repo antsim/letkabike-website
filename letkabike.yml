@@ -96,7 +96,6 @@ stages:
   - stage: C
     dependsOn: B
     displayName: "Generate release notes"
-    pool: server
 
     jobs:
       - job: releasenotes
