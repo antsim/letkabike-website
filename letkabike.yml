@@ -16,8 +16,6 @@ stages:
     jobs:
       - job: build
         displayName: "Build and Test"
-        pool:
-          vmImage: "ubuntu-latest"
 
         steps:
           - task: gittools.gitversion.gitversion-task.GitVersion@5
@@ -108,10 +106,4 @@ stages:
           - task: gittools.gitversion.gitversion-task.GitVersion@5
             displayName: GitVersion
 
-          - task: AzureFunction@1
-            displayName: "Call release notes generator"
-            inputs:
-              function: https://func-releasenotes.azurewebsites.net/api/ReleaseNotes
-              key: $(FunctionKey)
-              method: GET
-              queryParameters: "releaseId=$(Build.BuildId)"
+          - powershell: "PowerShell Invoke-WebRequest -Uri $(FunctionUri)?code=$(FunctionKey)&releaseId{Build.BuildId} -Method GET"
