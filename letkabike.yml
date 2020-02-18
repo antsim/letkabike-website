@@ -106,4 +106,4 @@ stages:
             displayName: "Invoke release notes gen"
             inputs:
               webserviceEndpoint: "Release Notes Functions"
-              relativeUrl: "?code=$(FunctionKey)&releaseId=$(Build.BuildId)"
+              relativeUrl: "?code=$(FunctionKey)&buildId=$(Build.BuildId)"
