@@ -1,4 +1,4 @@
-name: $(GitVersion.MajorMinorPatch)-$(GitVersion.ShortSha)
+name: $(GitVersion.SemVer)
 
 trigger:
   - master
