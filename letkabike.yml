@@ -36,7 +36,7 @@ stages:
             displayName: "dotnet build"
             inputs:
               projects: "**/LetkaBike.sln"
-              arguments: "--configuration $(BuildConfiguration) --no-restore"
+              arguments: "--configuration $(buildConfiguration) --no-restore"
               workingDirectory: src/LetkaBike/
 
           - task: DotNetCoreCLI@2
@@ -50,7 +50,7 @@ stages:
             displayName: "dotnet publish"
             inputs:
               command: publish
-              arguments: "--configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --verbosity d /p:Version=$(Build.BuildNumber)"
+              arguments: "--configuration $(buildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --verbosity d /p:Version=$(Build.BuildNumber)"
               modifyOutputPath: false
               workingDirectory: src/LetkaBike
 
