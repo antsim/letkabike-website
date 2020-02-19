@@ -20,6 +20,8 @@ stages:
         steps:
           - task: gittools.gitversion.gitversion-task.GitVersion@5
             displayName: GitVersion
+            inputs:
+              configFilePath: GitVersion.yml
 
           - task: UseDotNet@2
             displayName: "Use .Net Core sdk 3.0.x"
