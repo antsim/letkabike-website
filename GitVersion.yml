@@ -3,6 +3,8 @@ mode: ContinuousDeployment
 branches:
   develop:
     regex: ^master
+  master:
+    regex: ^release
 ignore:
   sha: []
 merge-message-formats: {}
