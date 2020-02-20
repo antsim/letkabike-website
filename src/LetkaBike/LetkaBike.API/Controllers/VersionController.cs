@@ -16,7 +16,7 @@ namespace LetkaBike.API.Controllers
         [Route("demo")]
         public IActionResult GetDemo()
         {
-            return new JsonResult("Tampere.NET");
+            return new JsonResult("Tampere.NET!!!");
         }
     }
 }
