@@ -7,6 +7,7 @@ namespace LetkaBike.Core.UnitOfWork
     public interface IUnitOfWork : IDisposable
     {
         IRepository<City> CitiesRepository { get; }
+        IRepository<Rider> RidersRepository { get; }
 
         void SaveChanges();
     }

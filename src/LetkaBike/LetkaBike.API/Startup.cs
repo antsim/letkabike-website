@@ -31,8 +31,8 @@ namespace LetkaBike.API
             services.AddControllers();
 
             // Use Sql Server 
-            //services.AddDbContext<LetkaContext>(options =>
-            //   options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
+            services.AddDbContext<LetkaContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
 
             // or 
 
@@ -43,8 +43,8 @@ namespace LetkaBike.API
             // or
 
             // SqlServer in-memory
-            services.AddDbContext<LetkaContext>(options =>
-                options.UseInMemoryDatabase("Letka"));
+            //services.AddDbContext<LetkaContext>(options =>
+            //    options.UseInMemoryDatabase("Letka"));
 
             services.AddDefaultIdentity<Rider>()
                 .AddRoles<IdentityRole>()
@@ -67,7 +67,7 @@ namespace LetkaBike.API
             });
 
             services.AddMediatR(Assembly.GetAssembly(typeof(GetCitiesHandler)));
-            
+
             services.TryAddScoped<IUnitOfWork, UnitOfWork>();
         }
 

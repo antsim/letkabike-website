@@ -23,8 +23,14 @@ namespace LetkaBike.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto model)
         {
-            var response = await _mediator.Send(new RegisterUserRequest());
-            return Ok();
+            var request = new RegisterUserRequest
+            {
+                Username = model.Username,
+                Email = model.Email,
+                Password = model.Password
+            };
+            var response = await _mediator.Send(request);
+            return new JsonResult(response);
         }
     }
 }

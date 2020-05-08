@@ -35,7 +35,7 @@ namespace LetkaBike.Core.Data
                 .HasKey(e => e.RideId);
 
             modelBuilder.Entity<Rider>()
-                .HasKey(e => e.RiderId);
+                .HasKey(e => e.Id);
 
             modelBuilder.Entity<RiderRide>()
                 .HasKey(e => new {e.RiderId, e.RideId});

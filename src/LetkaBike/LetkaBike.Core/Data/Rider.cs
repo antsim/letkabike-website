@@ -10,8 +10,6 @@ namespace LetkaBike.Core.Data
             Rides = new List<RiderRide>();
         }
 
-        public int RiderId { get; set; }
-
         public virtual ICollection<RiderRide> Rides { get; set; }
     }
 }

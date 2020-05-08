@@ -26,7 +26,7 @@ namespace LetkaBike.Tests
         // represents database's configuration
         private readonly DbContextOptions<LetkaContext> _options;
 
-        [Fact(Skip = "Not an actual test, only to re-create the local DB")]
+        [Fact]
         public void InitializeDatabaseWithTestData()
         {
             using var context = new LetkaContext(_options);
