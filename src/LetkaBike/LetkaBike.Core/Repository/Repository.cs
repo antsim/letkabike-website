@@ -1,14 +1,14 @@
-﻿using LetkaBike.Core.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LetkaBike.Core.Data;
 
 namespace LetkaBike.Core.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly LetkaContext _context;
+        private readonly LetkaContext _context;
 
         public Repository(LetkaContext context)
         {
@@ -37,7 +37,5 @@ namespace LetkaBike.Core.Repository
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             _context.Set<TEntity>().Update(entity);
         }
-
-        
     }
 }

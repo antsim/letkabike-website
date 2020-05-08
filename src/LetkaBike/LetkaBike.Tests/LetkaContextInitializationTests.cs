@@ -8,12 +8,6 @@ namespace LetkaBike.Tests
 {
     public class LetkaContextInitializationTests
     {
-        // to have the same Configuration object as in Startup
-        private readonly IConfigurationRoot _configuration;
-
-        // represents database's configuration
-        private readonly DbContextOptions<LetkaContext> _options;
-
         public LetkaContextInitializationTests()
         {
             var builder = new ConfigurationBuilder()
@@ -26,6 +20,12 @@ namespace LetkaBike.Tests
                 .Options;
         }
 
+        // to have the same Configuration object as in Startup
+        private readonly IConfigurationRoot _configuration;
+
+        // represents database's configuration
+        private readonly DbContextOptions<LetkaContext> _options;
+
         [Fact(Skip = "Not an actual test, only to re-create the local DB")]
         public void InitializeDatabaseWithTestData()
         {
@@ -33,14 +33,14 @@ namespace LetkaBike.Tests
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            context.Cities.Add(new City { Name = "Helsinki" });
-            context.Cities.Add(new City { Name = "Espoo" });
-            context.Cities.Add(new City { Name = "Tampere" });
+            context.Cities.Add(new City {Name = "Helsinki"});
+            context.Cities.Add(new City {Name = "Espoo"});
+            context.Cities.Add(new City {Name = "Tampere"});
 
-            context.Riders.Add(new Rider { Email = "rider@letkabike.com", UserName = "rider" });
+            context.Riders.Add(new Rider {Email = "rider@letkabike.com", UserName = "rider"});
 
             context.SaveChanges();
-            
+
             Assert.True(true);
         }
     }

@@ -7,7 +7,7 @@ namespace LetkaBike.Core.Data
     {
         public Ride()
         {
-            Riders = new HashSet<RiderRide>();    
+            Riders = new HashSet<RiderRide>();
         }
 
         public int RideId { get; set; }

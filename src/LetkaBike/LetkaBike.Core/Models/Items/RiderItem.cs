@@ -1,8 +1,8 @@
 using System;
 
-namespace LetkaBike.Core.Models
+namespace LetkaBike.Core.Models.Items
 {
-    public class RiderDTO
+    public class RiderItem
     {
         public int RiderId { get; set; }
         public int AccessFailedCount { get; set; }

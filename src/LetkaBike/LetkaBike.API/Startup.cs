@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Reflection;
+using System.Threading.Tasks;
 using LetkaBike.Core.Data;
-using LetkaBike.Core.Repository;
-using LetkaBike.Core.Services;
+using LetkaBike.Core.Handlers.Cities;
+using LetkaBike.Core.UnitOfWork;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using System.Threading.Tasks;
 
 namespace LetkaBike.API
 {
@@ -32,19 +33,19 @@ namespace LetkaBike.API
             // Use Sql Server 
             //services.AddDbContext<LetkaContext>(options =>
             //   options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
-           
+
             // or 
-            
+
             // Sqlite
             //services.AddDbContext<LetkaContext> (options =>
             //    options.UseSqlite("DataSource=:memory:"));
-            
+
             // or
-            
+
             // SqlServer in-memory
             services.AddDbContext<LetkaContext>(options =>
                 options.UseInMemoryDatabase("Letka"));
-            
+
             services.AddDefaultIdentity<Rider>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<LetkaContext>()
@@ -65,9 +66,9 @@ namespace LetkaBike.API
                 };
             });
 
-            services.TryAddScoped<IRepository<City>, Repository<City>>();
-            services.TryAddScoped<ICityService, CityService>();
-            services.TryAddScoped<IUserService, UserService>();
+            services.AddMediatR(Assembly.GetAssembly(typeof(GetCitiesHandler)));
+            
+            services.TryAddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,10 +99,7 @@ namespace LetkaBike.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
         }
     }
 }

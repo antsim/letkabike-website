@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace LetkaBike.Core.Data
 {
@@ -7,7 +7,7 @@ namespace LetkaBike.Core.Data
     {
         public Rider()
         {
-            Rides = new List<RiderRide>();    
+            Rides = new List<RiderRide>();
         }
 
         public int RiderId { get; set; }

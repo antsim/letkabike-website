@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LetkaBike.Core.Services;
+﻿using System.Threading.Tasks;
+using LetkaBike.Core.Models.Requests;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LetkaBike.API.Controllers
 {
@@ -8,17 +10,19 @@ namespace LetkaBike.API.Controllers
     [ApiController]
     public class CitiesController : ControllerBase
     {
-        private readonly ICityService _cityService;
-        public CitiesController(ICityService cityService)
+        private readonly IMediator _mediator;
+
+        public CitiesController(IMediator mediator)
         {
-            _cityService = cityService;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public JsonResult GetCities()
+        public async Task<JsonResult> GetCities()
         {
-            var cities = _cityService.GetAll();
-            return new JsonResult(cities);
+            var request = new GetCitiesRequest();
+            var response = await _mediator.Send(request);
+            return new JsonResult(response.Cities);
         }
     }
 }

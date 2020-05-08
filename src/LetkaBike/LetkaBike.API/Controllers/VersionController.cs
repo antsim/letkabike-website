@@ -12,11 +12,5 @@ namespace LetkaBike.API.Controllers
         {
             return new JsonResult(Assembly.GetEntryAssembly()?.GetName().Version);
         }
-
-        [Route("demo")]
-        public IActionResult GetDemo()
-        {
-            return new JsonResult("Tampere.NET!!!");
-        }
     }
 }

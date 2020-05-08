@@ -1,9 +1,9 @@
 using System;
 using LetkaBike.Core.Data;
 
-namespace LetkaBike.Core.Models
+namespace LetkaBike.Core.Models.Items
 {
-    public class RideDTO
+    public class RideItem
     {
         public int RideId { get; set; }
         public DateTimeOffset HappensOn { get; set; }

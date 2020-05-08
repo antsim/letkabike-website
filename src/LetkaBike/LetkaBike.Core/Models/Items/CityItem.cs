@@ -1,6 +1,6 @@
-namespace LetkaBike.Core.Models
+namespace LetkaBike.Core.Models.Items
 {
-    public class CityDTO
+    public class CityItem
     {
         public int CityId { get; set; }
         public string Name { get; set; }
