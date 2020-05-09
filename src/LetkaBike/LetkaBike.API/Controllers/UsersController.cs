@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using LetkaBike.API.Configuration;
 using LetkaBike.API.Models;
 using LetkaBike.Core.Models.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace LetkaBike.API.Controllers
 {
@@ -13,10 +15,15 @@ namespace LetkaBike.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly AppOptions _options;
 
-        public UsersController(IMediator mediator)
+        public UsersController(
+            IMediator mediator, 
+            IOptions<AppOptions> options
+            )
         {
             _mediator = mediator;
+            _options = options.Value;
         }
 
         [AllowAnonymous]

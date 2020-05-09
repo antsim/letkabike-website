@@ -1,5 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
+using LetkaBike.API.Behaviors;
+using LetkaBike.API.Configuration;
 using LetkaBike.Core.Data;
 using LetkaBike.Core.Handlers.Cities;
 using LetkaBike.Core.UnitOfWork;
@@ -13,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace LetkaBike.API
 {
@@ -29,22 +34,29 @@ namespace LetkaBike.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
 
-            // Use Sql Server 
-            services.AddDbContext<LetkaContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
+            var useDb = Configuration.GetSection("AppOptions").GetValue<string>("UseDB");
 
-            // or 
-
-            // Sqlite
-            //services.AddDbContext<LetkaContext> (options =>
-            //    options.UseSqlite("DataSource=:memory:"));
-
-            // or
-
-            // SqlServer in-memory
-            //services.AddDbContext<LetkaContext>(options =>
-            //    options.UseInMemoryDatabase("Letka"));
+            switch (Enum.Parse<UseDb>(useDb))
+            {
+                case UseDb.Sqlite:
+                    services.AddDbContext<LetkaContext> (options =>
+                        options.UseSqlite("DataSource=:memory:"));
+                    break;
+                case UseDb.InMemory:
+                    services.AddDbContext<LetkaContext>(options =>
+                        options.UseInMemoryDatabase("Letka"));
+                    break;
+                case UseDb.SqlServer:
+                    services.AddDbContext<LetkaContext>(options =>
+                        options.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase")));
+                    break;
+                case UseDb.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             services.AddDefaultIdentity<Rider>()
                 .AddRoles<IdentityRole>()
@@ -66,9 +78,11 @@ namespace LetkaBike.API
                 };
             });
 
+            services.TryAddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             services.AddMediatR(Assembly.GetAssembly(typeof(GetCitiesHandler)));
 
             services.TryAddScoped<IUnitOfWork, UnitOfWork>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

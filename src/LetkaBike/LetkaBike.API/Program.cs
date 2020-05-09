@@ -17,6 +17,7 @@ namespace LetkaBike.API
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
+                    logging.ClearProviders();
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                     logging.AddConsole();
                 });
