@@ -1,17 +1,21 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace LetkaBike.Core.Data
 {
-    public class LetkaContext : IdentityDbContext<Rider, IdentityRole, string>
+    public class LetkaContext : ApiAuthorizationDbContext<Rider>
     {
         private readonly DbContextOptions<LetkaContext> _options;
-
-        public LetkaContext(DbContextOptions<LetkaContext> options) : base(options)
+        private readonly IOptions<OperationalStoreOptions> _operationalStoreOptions;
+        
+        public LetkaContext(DbContextOptions<LetkaContext> options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
             _options = options;
+            _operationalStoreOptions = operationalStoreOptions;
         }
 
         public virtual DbSet<City> Cities { get; set; }

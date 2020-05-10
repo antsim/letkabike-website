@@ -1,7 +1,9 @@
 ﻿using System.IO;
+using IdentityServer4.EntityFramework.Options;
 using LetkaBike.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace LetkaBike.Tests
@@ -18,6 +20,16 @@ namespace LetkaBike.Tests
             _options = new DbContextOptionsBuilder<LetkaContext>()
                 .UseSqlServer(_configuration.GetConnectionString("LetkaDatabase"))
                 .Options;
+            _operationalStoreOptions = Options.Create(new OperationalStoreOptions
+            {
+                ConfigureDbContext = b =>
+                {
+                    b.UseSqlServer(_configuration.GetConnectionString("LetkaDatabase"),
+                        sql => sql.MigrationsAssembly("LetkaBike.Core"));
+                },
+                EnableTokenCleanup = true,
+                TokenCleanupInterval = 30
+            });
         }
 
         // to have the same Configuration object as in Startup
@@ -25,11 +37,11 @@ namespace LetkaBike.Tests
 
         // represents database's configuration
         private readonly DbContextOptions<LetkaContext> _options;
-
+        private readonly IOptions<OperationalStoreOptions> _operationalStoreOptions;
         [Fact]
         public void InitializeDatabaseWithTestData()
         {
-            using var context = new LetkaContext(_options);
+            using var context = new LetkaContext(_options, _operationalStoreOptions);
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 

@@ -7,6 +7,7 @@ using LetkaBike.Core.Data;
 using LetkaBike.Core.Handlers.Cities;
 using LetkaBike.Core.UnitOfWork;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -67,27 +68,26 @@ namespace LetkaBike.API
                 .AddEntityFrameworkStores<LetkaContext>()
                 .AddDefaultTokenProviders();
 
-            
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Events.OnRedirectToLogin = context =>
+            services.AddIdentityServer()
+                .AddOperationalStore(options =>
                 {
-                    context.Response.StatusCode = 401;
-                    return Task.CompletedTask;
-                };
-            });
+                    options.ConfigureDbContext = builder =>
+                        builder.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase"),
+                            sql => sql.MigrationsAssembly("LetkaBike.Core"));
+
+                    // this enables automatic token cleanup. this is optional.
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 30; // interval in seconds
+                })
+                .AddApiAuthorization<Rider, LetkaContext>();
+            
+            services.AddAuthentication()
+                .AddIdentityServerJwt();
 
             services.TryAddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             services.AddMediatR(Assembly.GetAssembly(typeof(GetCitiesHandler)));
 
             services.TryAddScoped<IUnitOfWork, UnitOfWork>();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
