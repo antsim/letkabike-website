@@ -4,7 +4,7 @@ namespace LetkaBike.Core.Models.Items
 {
     public class RiderItem
     {
-        public int RiderId { get; set; }
+        public string Id { get; set; }
         public int AccessFailedCount { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
