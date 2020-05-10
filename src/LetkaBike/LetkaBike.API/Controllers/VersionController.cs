@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetkaBike.API.Controllers
@@ -9,6 +10,13 @@ namespace LetkaBike.API.Controllers
     public class VersionController : Controller
     {
         public IActionResult Get()
+        {
+            return new JsonResult(Assembly.GetEntryAssembly()?.GetName().Version);
+        }
+
+        [Authorize]
+        [HttpGet("authorized")]
+        public IActionResult GetAuthenticated()
         {
             return new JsonResult(Assembly.GetEntryAssembly()?.GetName().Version);
         }

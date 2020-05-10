@@ -1,11 +1,11 @@
+using LetkaBike.Core.Models.Items;
 using LetkaBike.Core.Models.Responses;
 using MediatR;
 
 namespace LetkaBike.Core.Models.Requests
 {
-    public class AuthenticateUserRequest : IRequest<AuthenticateUserResponse>
+    public class GetRiderRequest : IRequest<GetRiderResponse>
     {
         public string Email { get; set; }
-        public string Password { get; set; }
     }
 }

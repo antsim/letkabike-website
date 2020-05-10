@@ -1,17 +1,15 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LetkaBike.API.Configuration;
 using LetkaBike.API.Models;
+using LetkaBike.Core.Data;
 using LetkaBike.Core.Models.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace LetkaBike.API.Controllers
 {
@@ -22,72 +20,79 @@ namespace LetkaBike.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly AppOptions _options;
+        private readonly SignInManager<Rider> _signInManager;
+        private readonly UserManager<Rider> _userManager;
+        private readonly ILogger<UsersController> _logger;
 
         public UsersController(
             IMediator mediator, 
-            IOptions<AppOptions> options
+            IOptions<AppOptions> options,
+            SignInManager<Rider> signInManager,
+            UserManager<Rider> userManager,
+            ILogger<UsersController> logger
             )
         {
             _mediator = mediator;
-            _options = options.Value;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _logger = logger;
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto apiRequest)
-        {
-            var request = new RegisterUserRequest
-            {
-                Username = apiRequest.Username,
-                Email = apiRequest.Email,
-                Password = apiRequest.Password
-            };
-            var response = await _mediator.Send(request);
-            return new JsonResult(response);
-        }
-        
-        [AllowAnonymous]
-        [HttpPost("authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> Authenticate([FromBody]AuthenticateUserDto apiRequest)
+        public async Task<IActionResult> Register([FromBody] RegisterUserDto apiRequest)
         {
-            var request = new AuthenticateUserRequest
+            var request = new GetRiderRequest
+            {
+                Email = apiRequest.Email
+            };
+
+            var rider = new Rider
             {
                 Email = apiRequest.Email,
-                Password = apiRequest.Password
+                UserName = apiRequest.UserName
             };
             
-            var response = await _mediator.Send(request);
+            var result = await _userManager.CreateAsync(rider, apiRequest.Password);
 
-            if (response?.Rider == null)
+            if (result != IdentityResult.Success)
             {
-                return BadRequest(new {message = "Username or password is incorrect"});
+                return BadRequest();
             }
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_options.AuthSecret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Sid, response.Rider.Id),
-                    new Claim(ClaimTypes.Name, response.Rider.UserName)
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
             
-            return Ok(new
+            await _signInManager.SignInAsync(rider, false);
+            return Ok();
+        }
+        
+        [AllowAnonymous]
+        [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Login(AuthenticateUserDto apiRequest)
+        {
+            var result = await _signInManager.PasswordSignInAsync(
+                apiRequest.UserName, 
+                apiRequest.Password, 
+                true, 
+                true);
+            
+            if (result.Succeeded)
             {
-                response.Rider.Id,
-                response.Rider.UserName,
-                Token = tokenString
-            });
+                return Ok();
+            }
+            
+            return BadRequest();
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
         }
     }
 }

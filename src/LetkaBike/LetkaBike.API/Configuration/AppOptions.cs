@@ -3,7 +3,6 @@ namespace LetkaBike.API.Configuration
     public class AppOptions
     {
         public UseDb UseDb { get; set; }
-        public string AuthSecret { get; set; }
     }
 
     public enum UseDb

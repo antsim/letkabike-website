@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using LetkaBike.API.Behaviors;
@@ -17,7 +16,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 
 namespace LetkaBike.API
 {
@@ -58,11 +56,18 @@ namespace LetkaBike.API
                     throw new ArgumentOutOfRangeException();
             }
 
-            services.AddDefaultIdentity<Rider>()
+            services.AddDefaultIdentity<Rider>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.SignIn.RequireConfirmedEmail = false;
+                    options.SignIn.RequireConfirmedPhoneNumber = false;
+                    options.User.RequireUniqueEmail = true;
+                })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<LetkaContext>()
                 .AddDefaultTokenProviders();
 
+            
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
