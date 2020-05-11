@@ -65,20 +65,9 @@ namespace LetkaBike.API
                     options.User.RequireUniqueEmail = true;
                 })
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<LetkaContext>()
-                .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<LetkaContext>();
 
             services.AddIdentityServer()
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(Configuration.GetConnectionString("LetkaDatabase"),
-                            sql => sql.MigrationsAssembly("LetkaBike.Core"));
-
-                    // this enables automatic token cleanup. this is optional.
-                    options.EnableTokenCleanup = true;
-                    options.TokenCleanupInterval = 30; // interval in seconds
-                })
                 .AddApiAuthorization<Rider, LetkaContext>();
             
             services.AddAuthentication()
