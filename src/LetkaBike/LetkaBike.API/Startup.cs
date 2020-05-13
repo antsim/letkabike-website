@@ -105,6 +105,7 @@ namespace LetkaBike.API
             app.UseCors();
 
             app.UseAuthentication();
+            app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
