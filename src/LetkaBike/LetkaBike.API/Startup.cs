@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Threading.Tasks;
 using LetkaBike.API.Behaviors;
 using LetkaBike.API.Configuration;
 using LetkaBike.Core.Data;
@@ -10,16 +9,14 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using VueCliMiddleware;
-    
+
 namespace LetkaBike.API
 {
     public class Startup
@@ -30,11 +27,25 @@ namespace LetkaBike.API
         }
 
         public IConfiguration Configuration { get; }
-
+        readonly string LetkaAllowSpecificOrigins = "_letkaAllowSpecificOrigins";
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: LetkaAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins(
+                            "https://localhost:44357",
+                            "https://192.168.100.13:44357"
+                            );
+                    });
+            });
+            
             services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
 
             var useDb = Configuration.GetSection("AppOptions").GetValue<string>("UseDB");
@@ -75,6 +86,9 @@ namespace LetkaBike.API
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
+            services.AddControllersWithViews();
+            services.AddRazorPages();
+            
             services.TryAddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             services.AddMediatR(Assembly.GetAssembly(typeof(GetCitiesHandler)));
 
@@ -83,7 +97,7 @@ namespace LetkaBike.API
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "ClientApp/build";
             });
         }
 
@@ -107,10 +121,10 @@ namespace LetkaBike.API
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            app.UseSpaStaticFiles();
 
             app.UseRouting();
-            app.UseCors();
+            app.UseCors(LetkaAllowSpecificOrigins);
 
             app.UseAuthentication();
             app.UseIdentityServer();
@@ -121,22 +135,17 @@ namespace LetkaBike.API
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-
-                if (env.IsDevelopment())
-                {
-                    
-                    endpoints.MapToVueCliProxy(
-                        "{*path}",
-                        new SpaOptions { SourcePath = "ClientApp" },
-                        npmScript: "serve",
-                        regex: "Compiled successfully");
-                }
+                endpoints.MapRazorPages();
             });
             
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
                 
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }
