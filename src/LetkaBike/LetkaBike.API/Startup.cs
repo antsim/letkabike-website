@@ -80,11 +80,11 @@ namespace LetkaBike.API
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<LetkaContext>();
 
-            services.AddIdentityServer()
-                .AddApiAuthorization<Rider, LetkaContext>();
+            //services.AddIdentityServer()
+            //    .AddApiAuthorization<Rider, LetkaContext>();
             
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+            //services.AddAuthentication()
+            //    .AddIdentityServerJwt();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -126,9 +126,9 @@ namespace LetkaBike.API
             app.UseRouting();
             app.UseCors(LetkaAllowSpecificOrigins);
 
-            app.UseAuthentication();
-            app.UseIdentityServer();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseIdentityServer();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
