@@ -14,6 +14,12 @@ namespace LetkaBike.API.Controllers
             return new JsonResult(Assembly.GetEntryAssembly()?.GetName().Version);
         }
 
+        [HttpGet("demo")]
+        public IActionResult GetWelcomeDemoPeople()
+        {
+	        return Ok("Hello Tampere dev guild!");
+        }
+
         [Authorize]
         [HttpGet("authorized")]
         public IActionResult GetAuthenticated()
