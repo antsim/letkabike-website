@@ -1,0 +1,65 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+stages:
+  - stage: build
+    displayName: 'Build'
+    jobs:
+      - job: build
+        steps:
+          - task: UseDotNet@2
+            displayName: 'Use .NET Core SDK'
+            inputs:
+              packageType: sdk
+              version: 3.1.x
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Build Solution'
+            inputs:
+              command: 'build'
+              projects: $(solution)
+              arguments: '--configuration $(buildConfiguration) --no-cache'
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Publish Solution'
+            inputs:
+              command: publish
+              publishWebProjects: true
+              arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactsStagingDirectory)/$(Build.BuildId).zip'
+              zipAfterPublish: true
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: $(Build.ArtifactsStagingDirectory)/$(Build.BuildId).zip
+              ArtifactName: drop
+
+  - stage: deploy_to_dev
+    displayName: 'Deploy to DEV'
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy
+        environment: 'development'
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: drop
+
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'letkabike-shared'
+                    appName: 'letkabike'
+                    appType: webAppLinux
+                    package: '$(Pipeline.Workspace)/**/*.zip'
