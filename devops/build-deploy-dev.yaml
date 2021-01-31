@@ -63,3 +63,12 @@ stages:
                     appName: 'letkabike'
                     appType: webAppLinux
                     package: '$(Pipeline.Workspace)/**/*.zip'
+
+  - stage: notify
+    displayName: 'Notify'
+    jobs:
+      - job: notify
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - bash: echo "http://localhost:7071/api/DemoFunction?buildId=$(Build.BuildId)"
