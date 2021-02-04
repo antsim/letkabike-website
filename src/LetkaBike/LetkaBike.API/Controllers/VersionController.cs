@@ -17,7 +17,7 @@ namespace LetkaBike.API.Controllers
         [HttpGet("demo")]
         public IActionResult GetWelcomeDemoPeople()
         {
-	        return Ok("Tampere Dev Guild needs a demo");
+	        return Ok("Some random demo");
         }
 
         [Authorize]
